@@ -11,8 +11,9 @@
         placeholder="Add a comment..."
         :value="newRecord.description"
         @input="newRecord.description = $event.target.value"
+        @keydown.enter.prevent="storeRecords.saveRecord()"
       />
-      <button class="buttonSave filled-icon" @click="saveRecord">
+      <button class="buttonSave filled-icon" @click="storeRecords.saveRecord()">
         <i class="bi bi-floppy2-fill"></i> Guardar registro
       </button>
     </div>
@@ -21,26 +22,13 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { useRecordsStore } from "../store/Records";
 
-const newRecord = ref({
-  description: "",
-  date: "",
-  icon: "bi bi-lightning-charge-fill",
-  color: "faded-icon",
-});
+import { storeToRefs } from "pinia";
 
-function saveRecord() {
-  console.log("Guardando registro...");
-  console.log(newRecord.value);
-  records.value.push(newRecord.value);
-  newRecord.value = {
-    description: "",
-    date: "",
-    icon: "bi bi-lightning-charge-fill",
-    color: "filed-icon",
-  };
-}
+const storeRecords = useRecordsStore();
+
+const { newRecord } = storeToRefs(storeRecords);
 </script>
 
 <style lang="scss" scoped>

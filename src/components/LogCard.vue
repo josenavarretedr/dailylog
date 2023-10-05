@@ -1,6 +1,4 @@
 <template>
-  <!-- Puede ser faded-icon o filled-icon dependiendo del un valor de un objeto como promps -->
-
   <div class="timeline-item">
     <span class="timeline-item-icon" :class="record.color">
       <i :class="record.icon"></i>
@@ -8,16 +6,20 @@
     <div class="timeline-item-description">
       <span>
         {{ record.description }} <br />
-        <div class="timeData">10 de Septiembre 2023, 14:00</div>
+        <div class="timeData">
+          <!-- Aquí debería de ir un span con la fecha larga en español tomando como fecha el record.date -->
+          <time :datetime="record.date">{{ fechaEnEspañol }}</time>
+        </div>
       </span>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { defineProps } from "vue";
+import { ref, computed } from "vue";
 
-defineProps({
+const props = defineProps({
   // Define props here
   record: {
     type: Object,
@@ -25,25 +27,46 @@ defineProps({
   },
 });
 
-// Este elemento recibirá un objeto con los datos de la actividad y los mostrará en pantalla
-// El objeto debe tener la siguiente estructura:
-// {
-//   "id": 1,
-//   "title": "Comí un sandwich de jamón y queso",
-//   "description": "Hoy comí un sandwich de jamón y queso.",
-//   "date": "2023-09-10T14:00:00.000Z",
-//   "type": "food",
-//   "icon": "bi bi-lightning-charge-fill"
-// }
+const fechaEnEspañol = computed(() => {
+  const diasSemana = ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"];
+  const meses = [
+    "Ene",
+    "Feb",
+    "Mar",
+    "Abr",
+    "May",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dic",
+  ];
 
-// El objeto puede tener los siguientes tipos:
-// food, water, exercise, sleep, medicine, mood, weight, bloodPressure, bloodSugar, heartRate, temperature, oxygenSaturation, respiratoryRate, steps, calories, distance, workout, mindfulness, period, sexualActivity, bathroom, symptom, vaccine, appointment, procedure, labResult, allergy, condition, immunization, medication, procedure, surgery, device, note, document, other
+  const fecha = new Date(props.record.date);
+  let diaSemana = diasSemana[fecha.getDay()];
+  let dia = fecha.getDate();
+  let mes = meses[fecha.getMonth()];
+  let año = fecha.getFullYear();
+  let hora = fecha.getHours();
+  let minutos = fecha.getMinutes();
+  let segundos = fecha.getSeconds();
 
-// El objeto puede tener los siguientes iconos:
-// bi bi-lightning-charge-fill, bi bi-droplet-fill, bi bi-heart-fill, bi bi-moon-fill, bi bi-file-med
+  if (hora < 10) {
+    hora = "0" + hora;
+  }
 
-// El objeto puede tener los siguientes colores:
-// faded-icon, filled-icon
+  if (minutos < 10) {
+    minutos = "0" + minutos;
+  }
+
+  if (segundos < 10) {
+    segundos = "0" + segundos;
+  }
+
+  return `${diaSemana}. ${dia} de ${mes}. de ${año}, ${hora}:${minutos}:${segundos}`;
+});
 </script>
 
 <style lang="scss" scoped>
