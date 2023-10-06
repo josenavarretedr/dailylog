@@ -4,6 +4,8 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
 import { bootstrapicons } from '../utils/boostrapIcons'
+import { v4 as uuidv4 } from 'uuid';
+
 
 export const useRecordsStore = defineStore('records', () => {
 
@@ -17,8 +19,10 @@ export const useRecordsStore = defineStore('records', () => {
       date: "2023-02-10T14:00:00.000Z",
       icon: "bi bi-lightning-charge-fill",
       color: "faded-icon",
+      id: '1',
     },
     {
+      id: '2',
       description: "Aprendí a usar GitHub Copilot hoy.",
       date: "2023-01-11T10:00:00.000Z",
       icon: "bi bi-book",
@@ -29,18 +33,22 @@ export const useRecordsStore = defineStore('records', () => {
       date: "2023-04-12T18:00:00.000Z",
       icon: "bi bi-balloon-heart",
       color: "faded-icon",
+      id: '3',
+
     },
     {
       description: "Hoy vi una película de terror y no pude dormir.",
       date: "2023-04-14T22:00:00.000Z",
       icon: "bi bi-film",
       color: "filled-icon",
+      id: '4',
     },
     {
       description: "Hoy cociné una cena deliciosa para mi familia.",
       date: "2023-06-14T19:00:00.000Z",
       icon: "bi bi-egg-fried",
       color: "filled-icon",
+      id: '5',
     },
   ]);
 
@@ -49,6 +57,7 @@ export const useRecordsStore = defineStore('records', () => {
     date: null,
     icon: "bi",
     color: "faded-icon",
+    id: null,
   });
 
   function resetNewLog() {
@@ -57,16 +66,20 @@ export const useRecordsStore = defineStore('records', () => {
       date: null,
       icon: "bi ",
       color: "faded-icon",
+      id: null,
     }
   }
 
   function saveRecord() {
+
     let today = new Date();
     newRecord.value.date = today;
 
     if (newRecord.value.description === "") {
       newRecord.value.description = "No description";
     }
+
+    newRecord.value.id = uuidv4();
 
     let randomIcon = bootstrapicons[Math.floor(Math.random() * bootstrapicons.length)];
 
@@ -76,10 +89,14 @@ export const useRecordsStore = defineStore('records', () => {
     resetNewLog();
   }
 
+  function deleteRecord(id) {
+    records.value = records.value.filter((record) => record.id !== id);
+  }
+
   return {
     records,
     recordsByDate,
-    newRecord, resetNewLog, saveRecord
+    newRecord, resetNewLog, saveRecord, deleteRecord
   };
 
 });

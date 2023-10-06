@@ -11,13 +11,24 @@
           <time :datetime="record.date">{{ fechaEnEspañol }}</time>
         </div>
       </span>
+      <br />
+      <div class="timeline-item-delete">
+        <button
+          class="buttonDelete faded-icon"
+          @click="storeRecords.deleteRecord(record.id)"
+        >
+          <i class="bi bi-trash-fill"></i>
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps } from "vue";
-import { ref, computed } from "vue";
+import { defineProps, computed } from "vue";
+import { useRecordsStore } from "../store/Records";
+
+const storeRecords = useRecordsStore();
 
 const props = defineProps({
   // Define props here
@@ -120,6 +131,7 @@ const fechaEnEspañol = computed(() => {
 
 .timeline-item-description {
   display: flex;
+  flex-direction: column;
   padding-top: 6px;
   gap: 8px;
   color: var(--c-grey-400);
@@ -151,12 +163,31 @@ const fechaEnEspañol = computed(() => {
     border-color: var(--c-grey-300);
     outline: 0; // Don't actually do this
     box-shadow: 0 0 0 4px var(--c-grey-100);
-    cursor: pointer;
+    // cursor: pointer;
     // FIX No se puede usar el hover en el componente continuo
 
     & + .timeline-item-icon {
       border: 1px solid red;
     }
+  }
+}
+
+.timeline-item-delete {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.buttonDelete {
+  border: 0;
+  padding: 0.6rem;
+  margin-right: 4px;
+  font-size: 0.9rem;
+  border-radius: 50%;
+  color: #fff;
+  background-color: #db5151;
+  cursor: pointer;
+  &:hover {
+    background-color: #c23b3b;
   }
 }
 </style>
